@@ -30,14 +30,13 @@ class SimpleXmlBuilder extends SimpleXMLElement
     /**
      * Creates an xml document from an array.
      * Array keys @attributes can have associative arrays which will be converted
-     * to
-     * attributes for the parent.
+     * to attributes for the parent.
      * Array keys @namespace to define a namespace for a node.
      *
      * @param array $document
      * @param null|SimpleXmlBuilder $xmlDocument a SimpleXmlBuilder document to
      *     append to.
-     * @return null|SimpleXmlBuilder
+     * @return null|SimpleXmlBuilder Will return null if the $document was empty.
      */
     public static function createXML(array $document, &$xmlDocument = null)
     {
@@ -46,7 +45,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
             $attributes = '';
 
             if (!empty($values['@namespace'])) {
-                $namespace = $values['@namespace'];
+                $namespace = (string) $values['@namespace'];
                 unset($values['@namespace']);
             }
 
@@ -103,6 +102,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
             }
         }
 
+        // Returns null if $document was empty.
         return $xmlDocument;
     }
 
@@ -122,7 +122,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
         }
 
         $node = dom_import_simplexml($this);
-        $no   = $node->ownerDocument;
+        $no = $node->ownerDocument;
         $node->appendChild($no->createCDATASection($nodeValue));
 
         return true;
