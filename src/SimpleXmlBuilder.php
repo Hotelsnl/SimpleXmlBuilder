@@ -117,7 +117,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
         try {
             $nodeValue = (string)$nodeValue;
         } catch (\Exception $e) {
-            syslog(E_WARNING, $e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            syslog(LOG_WARNING, $e->getMessage() . PHP_EOL . $e->getTraceAsString());
             return false;
         }
 
@@ -140,7 +140,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
     public function asXML($filename = null, $longOutput = false)
     {
         if (!is_bool($longOutput)) {
-            syslog(E_WARNING, 'Not a valid long option given.');
+            syslog(LOG_WARNING, 'Not a valid long option given.');
             return false;
         }
 
@@ -148,7 +148,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
         $xml = parent::asXML();
 
         if (empty($xml)) {
-            syslog(E_WARNING, 'Empty XML document.');
+            syslog(LOG_WARNING, 'Empty XML document.');
             return false;
         }
 
