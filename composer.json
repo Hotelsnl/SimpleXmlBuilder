@@ -1,0 +1,22 @@
+{
+    "name": "hotelsnl/simplexmlbuilder",
+    "type": "library",
+    "description": "Building XML from PHP arrays, extending SimpleXMLElement",
+    "keywords": ["hotelsnl", "XML", "SimpleXMLElement", "DOMElement", "php"],
+    "homepage": "https://github.com/Hotelsnl/nagios-plugins/",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Remko Silvis",
+            "email": "remko@hotels.nl"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "HotelsNL\\SimpleSmlBuilder\\": "src"
+        }
+    }
+}
