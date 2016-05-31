@@ -88,27 +88,6 @@ $document = array(
 
 $xml = SimpleXmlBuilder::createXML($document);
 echo $xml->asXML(null, true);
-
-$document = array(
-    'listing' => array(
-        'id' => 3,
-        'language' => 'de',
-        'datum' => 'WGS84',
-        'name' => 'Feature stay at Apple',
-        'description' => 'it\'s awesome sauce >< & fitting for a hipster |www|.',
-        'features' => array(
-            'crown' => 'hair, worn on chin',
-            'gender' => 'male',
-            'temper' => 'chill'
-        )
-    )
-);
-
-$xmlDocument = new SimpleXmlBuilder('<?xml version="1.0" encoding="latin1"?><listings></listings>');
-
-$xml = SimpleXmlBuilder::createXML($document, $xmlDocument);
-echo $xml->asXML(null, true);
-
 ```
 
 The above code will output:
@@ -152,7 +131,33 @@ The above code will output:
     </features>
   </listing>
 </listings>
+```
 
+## If you need more control on the start of the document you can pass your own SimpleXmlBuilder object.
+```php
+$document = array(
+    'listing' => array(
+        'id' => 3,
+        'language' => 'de',
+        'datum' => 'WGS84',
+        'name' => 'Feature stay at Apple',
+        'description' => 'it\'s awesome sauce >< & fitting for a hipster |www|.',
+        'features' => array(
+            'crown' => 'hair, worn on chin',
+            'gender' => 'male',
+            'temper' => 'chill'
+        )
+    )
+);
+
+$xmlDocument = new SimpleXmlBuilder('<?xml version="1.0" encoding="latin1"?><listings></listings>');
+
+$xml = SimpleXmlBuilder::createXML($document, $xmlDocument);
+echo $xml->asXML(null, true);
+```
+
+This will output:
+```xml
 <?xml version="1.0" encoding="latin1"?>
 <listings>
   <listing>
@@ -168,5 +173,4 @@ The above code will output:
     </features>
   </listing>
 </listings>
-
 ```
