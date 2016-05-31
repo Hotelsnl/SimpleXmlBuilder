@@ -1,5 +1,5 @@
 # SimpleXmlBuilder
-Extended SimpleXMLElement with array parsing and adding CDATA
+Extended [SimpleXMLElement](http://php.net/manual/class.simplexmlelement.php) with array parsing and adding CDATA
 
 This package adds some convenience functions to SimpleXMLElement.
 
