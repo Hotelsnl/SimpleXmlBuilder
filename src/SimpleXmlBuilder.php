@@ -38,7 +38,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
      *     append to.
      * @return null|SimpleXmlBuilder Will return null if the $document was empty.
      */
-    public static function createXML(array $document, &$xmlDocument = null)
+    public static function createXML(array $document, SimpleXmlBuilder &$xmlDocument = null)
     {
         foreach ($document as $element => $values) {
             $namespace = null;
