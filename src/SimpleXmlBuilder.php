@@ -80,8 +80,8 @@ class SimpleXmlBuilder extends SimpleXMLElement
                             );
                         }
                     } else {
-                        /** @var SimpleXmlBuilder $child */
                         // Continue in the next node.
+                        /** @var SimpleXmlBuilder $child */
                         $child = $xmlDocument->addChild($element, null, $namespace);
                         static::createXML($values, $child);
                     };
@@ -133,9 +133,11 @@ class SimpleXmlBuilder extends SimpleXMLElement
      *
      * @param string $filename Optional filename.
      * @param boolean $longOutput .
-     * @return string|void|false returns false on error,
-     *  void if a filename is given,
-     *  string if no filename was given.
+     * @return string|boolean
+     *  Returns false on error
+     *  If a filename is given it will return true if writing was successful
+     *  false otherwise.
+     *  Returns the XML as string if no filename was given.
      */
     public function asXML($filename = null, $longOutput = false)
     {
@@ -152,18 +154,17 @@ class SimpleXmlBuilder extends SimpleXMLElement
             return false;
         }
 
-        $dom = new \DOMDocument("1.0");
+        /** @var \DOMElement $node */
+        $node = dom_import_simplexml($this);
+        $dom = $node->ownerDocument;
 
         if ($longOutput) {
             $dom->formatOutput = true;
             $dom->preserveWhiteSpace = false;
         }
 
-        $dom->loadXML($xml);
-
         if (!empty($filename)) {
-            $dom->save($filename);
-            return;
+            return $dom->save($filename) !== false;
         }
 
         return $dom->saveXML();
