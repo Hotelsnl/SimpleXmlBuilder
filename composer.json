@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "HotelsNL\\SimpleSmlBuilder\\": "src"
+            "HotelsNL\\SimpleXmlBuilder\\": "src/"
         }
     }
 }
