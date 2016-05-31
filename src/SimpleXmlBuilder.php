@@ -70,39 +70,30 @@ class SimpleXmlBuilder extends SimpleXMLElement
                 );
                 static::createXML($values, $xmlDocument);
             } else {
-                $currElement = $element;
-
-                if (is_int($element)) {
-                    // If the element is an integer, a flat array is found,
-                    // meaning more elements for the current node.
-                    // Continue in the current node.
-                    $currElement = $xmlDocument->getName();
-                }
-
                 if (is_array($values)) {
                     // Check if we have a numeric array. This means we need
                     // to add elements to the same node.
                     if ($values === array_values($values)) {
                         foreach ($values as $listing) {
                             static::createXML(
-                                array($currElement => $listing),
+                                array($element => $listing),
                                 $xmlDocument
                             );
                         }
                     } else {
                         /** @var SimpleXmlBuilder $child */
                         // Continue in the next node.
-                        $child = $xmlDocument->addChild($currElement, null, $namespace);
+                        $child = $xmlDocument->addChild($element, null, $namespace);
                         static::createXML($values, $child);
                     };
                 } elseif (is_scalar($values)) {
                     if (strpbrk($values, static::$dangerousCharacters)) {
                         /** @var SimpleXmlBuilder $child */
-                        $child = $xmlDocument->addChild($currElement, null, $namespace);
+                        $child = $xmlDocument->addChild($element, null, $namespace);
                         $child->addCData($values);
                     } else {
                         $xmlDocument->addChild(
-                            $currElement,
+                            $element,
                             htmlentities($values, ENT_QUOTES),
                             $namespace
                         );
