@@ -150,7 +150,7 @@ $document = array(
     )
 );
 
-$xmlDocument = new SimpleXmlBuilder('<?xml version="1.0" encoding="latin1"?><listings></listings>');
+$xmlDocument = new SimpleXmlBuilder('<?xml version="1.0" encoding="ISO-8859-1"?><listings></listings>');
 
 $xml = SimpleXmlBuilder::createXML($document, $xmlDocument);
 echo $xml->asXML(null, true);
@@ -158,7 +158,7 @@ echo $xml->asXML(null, true);
 
 This will output:
 ```xml
-<?xml version="1.0" encoding="latin1"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <listings>
   <listing>
     <id>3</id>
