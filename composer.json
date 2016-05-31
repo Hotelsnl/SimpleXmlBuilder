@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Building XML from PHP arrays, extending SimpleXMLElement",
     "keywords": ["hotelsnl", "XML", "SimpleXMLElement", "DOMElement", "php"],
-    "homepage": "https://github.com/Hotelsnl/nagios-plugins/",
+    "homepage": "https://github.com/Hotelsnl/SimpleXmlBuilder/",
     "license": "Apache-2.0",
     "authors": [
         {
