@@ -22,7 +22,7 @@ format, increasing readability.
     )
 ```
 
-* Using a associative PHP array to generate an XML message.
+* Using an associative PHP array to generate an XML message.
   The special keys `@attributes` and `@namespace` can be added to add 
   attributes to the parent element.
   Strings containing XML special characters will be captioned in a 

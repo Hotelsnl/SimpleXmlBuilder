@@ -93,7 +93,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
                     } else {
                         $xmlDocument->addChild(
                             $element,
-                            htmlentities($values, ENT_QUOTES),
+                            htmlspecialchars($values, ENT_QUOTES),
                             $namespace
                         );
                     }
@@ -131,8 +131,8 @@ class SimpleXmlBuilder extends SimpleXMLElement
     /**
      * Return a well-formed XML string based on SimpleXML element.
      *
-     * @param string $filename Optional filename.
-     * @param boolean $longOutput .
+     * @param string $filename Optional filename
+     * @param boolean $longOutput Set to true if you want a more readable output.
      * @return string|boolean
      *  Returns false on error
      *  If a filename is given it will return true if writing was successful
