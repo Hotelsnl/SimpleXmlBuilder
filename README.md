@@ -3,19 +3,31 @@ Extended SimpleXMLElement with array parsing and adding CDATA
 
 This package adds some convenience functions to SimpleXMLElement.
 
-* Strings containing XML special characters will be captioned in a 
-CDATA element.
+* Added a function to add a CDATA element to the current node.
+```php
+    public boolean SimpleXMLElement::addCData (string $nodeValue)
+```
+
+* Added a function to get the parent of the current node.
+```php
+    public SimpleXMLElement SimpleXMLElement::getParent ()
+```
 
 * Modified asXml() to accept an extra parameter for outputting the long 
 format, increasing readability.
 
 ```php
-    public mixed SimpleXMLElement::asXML ([ string $filename ], [ boolean] $longOutput)
+    public string|boolean SimpleXMLElement::asXML ([ string $filename ] [, boolean $longOutput ])
 ```
 
 * Using a associative PHP array to generate an XML message.
   The special keys `@attributes` and `@namespace` can be added to add 
   attributes to the parent element.
+  Strings containing XML special characters will be captioned in a 
+  CDATA element.
+```php
+  public static null|SimpleXmlBuilder SimpleXMLElement::createXML (array $document [, &$xmlDocument = null ])
+```
 
 # Usage
 
