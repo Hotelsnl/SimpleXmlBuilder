@@ -17,7 +17,9 @@ This package adds some convenience functions to SimpleXMLElement.
 format, increasing readability.
 
 ```php
-    public string|boolean SimpleXMLElement::asXML ([ string $filename ] [, boolean $longOutput ])
+    public string|boolean SimpleXMLElement::asXML (
+        [ string $filename ] [, boolean $longOutput ]
+    )
 ```
 
 * Using a associative PHP array to generate an XML message.
@@ -26,7 +28,9 @@ format, increasing readability.
   Strings containing XML special characters will be captioned in a 
   CDATA element.
 ```php
-  public static null|SimpleXmlBuilder SimpleXMLElement::createXML (array $document [, &$xmlDocument = null ])
+    public static null|SimpleXmlBuilder SimpleXMLElement::createXML (
+        array $document [, &$xmlDocument = null ]
+    )
 ```
 
 # Usage
