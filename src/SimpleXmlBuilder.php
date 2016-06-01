@@ -54,7 +54,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
                 continue;
             }
 
-            $this->addAttribute($name, $value);
+            $this->addAttribute(trim($name), trim($value));
         }
     }
 
