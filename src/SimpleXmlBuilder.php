@@ -172,6 +172,16 @@ class SimpleXmlBuilder extends SimpleXMLElement
                 unset($values['@attributes']);
             }
 
+            // If there is only one value in the array and it is scalar,
+            // make this the new value.
+            if (is_array($values)
+                && $values === array_values($values) // Numeric array check
+                && count($values) === 1
+                && is_scalar(current($values))
+            ) {
+                $values = current($values);
+            }
+
             if (!isset($xmlDocument)) {
                 $xmlDocument = new static(
                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?><{$element}/>",
@@ -191,8 +201,22 @@ class SimpleXmlBuilder extends SimpleXMLElement
                     // to add elements to the same node.
                     if ($values === array_values($values)) {
                         foreach ($values as $listing) {
+                            // Make sure attributes and namespace get propagated
+                            // to the concurrent elements.
+                            $listing = array(
+                                $element => $listing
+                            );
+
+                            if (!empty($attributes)) {
+                                $listing['@attributes'] = $attributes;
+                            }
+
+                            if (!empty($namespace)) {
+                                $listing['@namespace'] = $namespace;
+                            }
+
                             static::createXML(
-                                array($element => $listing),
+                                $listing,
                                 $xmlDocument
                             );
                         }

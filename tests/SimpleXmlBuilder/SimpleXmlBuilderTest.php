@@ -18,7 +18,7 @@ class SimpleXmlBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function documentAsArrayProvider()
     {
-        return array(
+        $rv = array(
             array(
                 array(
                     'listing' => array(
@@ -40,8 +40,48 @@ class SimpleXmlBuilderTest extends \PHPUnit_Framework_TestCase
                 ),
                 null,
                 '<?xml version="1.0" encoding="UTF-8"?><listing type="test"><hotel status="offline"><name>hotel1</name></hotel></listing>'
+            ),
+            array(
+                array(
+                    'listing' => array(
+                        '@attributes' => array('type' => 'test'),
+                        'hotel' => array(
+                            array(
+                                '@attributes' => array('status' => 'offline'),
+                                'name' => 'hotel1'
+                            ),
+                            array(
+                                '@attributes' => array('status' => 'online'),
+                                'name' => 'hotel2'
+                            )
+                        )
+                    )
+                ),
+                null,
+                '<?xml version="1.0" encoding="UTF-8"?><listing type="test"><hotel status="offline"><name>hotel1</name></hotel><hotel status="online"><name>hotel2</name></hotel></listing>'
+            ),
+            array(
+                array(
+                    'listing' => array(
+                        '@attributes' => array('type' => 'test'),
+                        'component' => array(
+                            array(
+                                '@attributes' => array('type' => 'name'),
+                                'hotel1'
+                            ),
+                            array(
+                                '@attributes' => array('type' => 'city'),
+                                'Groningen'
+                            )
+                        )
+                    )
+                ),
+                null,
+                '<?xml version="1.0" encoding="UTF-8"?><listing type="test"><component type="name">hotel1</component><component type="city">Groningen</component></listing>'
             )
         );
+
+        return $rv;
     }
 
     /**
