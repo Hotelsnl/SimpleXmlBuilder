@@ -36,7 +36,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
     public function addAttributes(array $attributes)
     {
         foreach ($attributes as $name => $value) {
-            if (!is_scalar($name)) {
+            if (!is_string($name)) {
                 syslog(
                     LOG_WARNING,
                     'Attribute name is not a string: ' . var_export($name, true)
@@ -62,9 +62,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
                 $value = trim((string) $value);
             }
 
-            $name = trim((string) $name);
-
-            $this->addAttribute($name, $value);
+            $this->addAttribute(trim($name), $value);
         }
     }
 
