@@ -20,7 +20,7 @@ This package adds some convenience functions to SimpleXMLElement.
   CDATA element.
 ```php
     public static SimpleXmlBuilder SimpleXMLElement::createXML (
-        array $document [, &$xmlDocument = null ]
+        [ array $document = array() ] [, &$xmlDocument = null ]
     )
 ```
 
