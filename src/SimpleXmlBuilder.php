@@ -36,25 +36,35 @@ class SimpleXmlBuilder extends SimpleXMLElement
     public function addAttributes(array $attributes)
     {
         foreach ($attributes as $name => $value) {
-            if (!is_string($name)) {
+            if (!is_scalar($name)) {
                 syslog(
                     LOG_WARNING,
                     'Attribute name is not a string: ' . var_export($name, true)
                 );
 
+                // Skipping invalid attribute.
                 continue;
             }
 
-            if (!is_string($value)) {
+            if (!is_scalar($value)) {
                 syslog(
                     LOG_WARNING,
                     'Attribute value is not a string: ' . var_export($value, true)
                 );
 
+                // Skipping invalid attribute.
                 continue;
             }
 
-            $this->addAttribute(trim($name), trim($value));
+            if (is_bool($value)) {
+                $value = $value ? 'TRUE' : 'FALSE';
+            } else {
+                $value = trim((string) $value);
+            }
+
+            $name = trim((string) $name);
+
+            $this->addAttribute($name, $value);
         }
     }
 
@@ -133,10 +143,11 @@ class SimpleXmlBuilder extends SimpleXMLElement
      *     append to
      * @return SimpleXmlBuilder
      */
-    public static function createXML(array $document, SimpleXmlBuilder &$xmlDocument = null)
-    {
+    public static function createXML(
+        array $document = array(),
+        SimpleXmlBuilder &$xmlDocument = null
+    ) {
         foreach ($document as $element => $values) {
-            var_dump($values);
             $namespace = null;
             $attributes = '';
 
@@ -146,8 +157,6 @@ class SimpleXmlBuilder extends SimpleXMLElement
             }
 
             if (!empty($values['@attributes'])) {
-                var_dump($values['@attributes']);
-
                 if (is_string($values['@attributes'])) {
                     list($key, $value) = explode('=', $values['@attributes']);
                     if (!empty($key) && !empty($value)) {
@@ -172,9 +181,11 @@ class SimpleXmlBuilder extends SimpleXMLElement
                     false,
                     $namespace
                 );
+
                 if ($attributes) {
                     $xmlDocument->addAttributes($attributes);
                 }
+
                 static::createXML($values, $xmlDocument);
             } else {
                 if (is_array($values)) {
