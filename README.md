@@ -28,7 +28,7 @@ format, increasing readability.
   Strings containing XML special characters will be captioned in a 
   CDATA element.
 ```php
-    public static null|SimpleXmlBuilder SimpleXMLElement::createXML (
+    public static SimpleXmlBuilder SimpleXMLElement::createXML (
         array $document [, &$xmlDocument = null ]
     )
 ```

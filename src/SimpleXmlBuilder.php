@@ -28,82 +28,34 @@ class SimpleXmlBuilder extends SimpleXMLElement
     private static $dangerousCharacters = '\'"><&';
 
     /**
-     * Creates an xml document from an array.
-     * Array keys @attributes can have associative arrays which will be converted
-     * to attributes for the parent.
-     * Array keys @namespace to define a namespace for a node.
+     * Wrapper for addAttribute to allow for an array of attributes.
      *
-     * @param array $document
-     * @param null|SimpleXmlBuilder $xmlDocument a SimpleXmlBuilder document to
-     *     append to.
-     * @return null|SimpleXmlBuilder Will return null if the $document was empty.
+     * @param array $attributes
+     * @return void
      */
-    public static function createXML(array $document, SimpleXmlBuilder &$xmlDocument = null)
+    public function addAttributes(array $attributes)
     {
-        foreach ($document as $element => $values) {
-            $namespace = null;
-            $attributes = '';
-
-            if (!empty($values['@namespace'])) {
-                $namespace = (string) $values['@namespace'];
-                unset($values['@namespace']);
-            }
-
-            if (!empty($values['@attributes'])) {
-                array_walk(
-                    $values['@attributes'],
-                    function ($value, $key) use (&$attributes) {
-                        $attributes .= "{$key}=\"{$value}\" ";
-                    }
+        foreach ($attributes as $name => $value) {
+            if (!is_string($name)) {
+                syslog(
+                    LOG_WARNING,
+                    'Attribute name is not a string: ' . var_export($name, true)
                 );
-                $attributes = trim($attributes);
-                unset($values['@attributes']);
+
+                continue;
             }
 
-            if (!isset($xmlDocument)) {
-                $xmlDocument = new static(
-                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?><{$element} {$attributes}/>",
-                    0,
-                    false,
-                    $namespace
+            if (!is_string($value)) {
+                syslog(
+                    LOG_WARNING,
+                    'Attribute value is not a string: ' . var_export($value, true)
                 );
-                static::createXML($values, $xmlDocument);
-            } else {
-                if (is_array($values)) {
-                    // Check if we have a numeric array. This means we need
-                    // to add elements to the same node.
-                    if ($values === array_values($values)) {
-                        foreach ($values as $listing) {
-                            static::createXML(
-                                array($element => $listing),
-                                $xmlDocument
-                            );
-                        }
-                    } else {
-                        // Continue in the next node.
-                        /** @var SimpleXmlBuilder $child */
-                        $child = $xmlDocument->addChild($element, null, $namespace);
-                        static::createXML($values, $child);
-                    };
-                } elseif (is_scalar($values)) {
-                    if (strpbrk($values, static::$dangerousCharacters)) {
-                        /** @var SimpleXmlBuilder $child */
-                        $child = $xmlDocument->addChild($element, null, $namespace);
-                        $child->addCData($values);
-                    } else {
-                        $xmlDocument->addChild(
-                            $element,
-                            htmlspecialchars($values, ENT_QUOTES),
-                            $namespace
-                        );
-                    }
 
-                }
+                continue;
             }
+
+            $this->addAttribute($name, $value);
         }
-
-        // Returns null if $document was empty.
-        return $xmlDocument;
     }
 
     /**
@@ -168,6 +120,115 @@ class SimpleXmlBuilder extends SimpleXMLElement
         }
 
         return $dom->saveXML();
+    }
+
+    /**
+     * Creates an xml document from an array.
+     * Array keys @attributes can have associative arrays which will be converted
+     * to attributes for the parent.
+     * Array keys @namespace to define a namespace for a node.
+     *
+     * @param array $document
+     * @param null|SimpleXmlBuilder $xmlDocument a SimpleXmlBuilder document to
+     *     append to
+     * @return SimpleXmlBuilder
+     */
+    public static function createXML(array $document, SimpleXmlBuilder &$xmlDocument = null)
+    {
+        foreach ($document as $element => $values) {
+            var_dump($values);
+            $namespace = null;
+            $attributes = '';
+
+            if (!empty($values['@namespace'])) {
+                $namespace = (string) $values['@namespace'];
+                unset($values['@namespace']);
+            }
+
+            if (!empty($values['@attributes'])) {
+                var_dump($values['@attributes']);
+
+                if (is_string($values['@attributes'])) {
+                    list($key, $value) = explode('=', $values['@attributes']);
+                    if (!empty($key) && !empty($value)) {
+                        $attributes = array($key, $value);
+                    }
+                } elseif (is_array($values['@attributes'])) {
+                    $attributes = $values['@attributes'];
+                } else {
+                    syslog(
+                        LOG_WARNING,
+                        '@attributes format not valid: ' . $values['@attributes']
+                    );
+                }
+
+                unset($values['@attributes']);
+            }
+
+            if (!isset($xmlDocument)) {
+                $xmlDocument = new static(
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?><{$element}/>",
+                    0,
+                    false,
+                    $namespace
+                );
+                if ($attributes) {
+                    $xmlDocument->addAttributes($attributes);
+                }
+                static::createXML($values, $xmlDocument);
+            } else {
+                if (is_array($values)) {
+                    // Check if we have a numeric array. This means we need
+                    // to add elements to the same node.
+                    if ($values === array_values($values)) {
+                        foreach ($values as $listing) {
+                            static::createXML(
+                                array($element => $listing),
+                                $xmlDocument
+                            );
+                        }
+                    } else {
+                        // Continue in the next node.
+                        /** @var SimpleXmlBuilder $child */
+                        $child = $xmlDocument->addChild($element, null, $namespace);
+
+                        if ($attributes) {
+                            $child->addAttributes($attributes);
+                        }
+
+                        static::createXML($values, $child);
+                    };
+                } elseif (is_scalar($values)) {
+                    if (strpbrk($values, static::$dangerousCharacters)) {
+                        /** @var SimpleXmlBuilder $child */
+                        $child = $xmlDocument->addChild($element, null, $namespace);
+
+                        if ($attributes) {
+                            $child->addAttributes($attributes);
+                        }
+
+                        $child->addCData($values);
+                    } else {
+                        $child = $xmlDocument->addChild(
+                            $element,
+                            htmlspecialchars($values, ENT_QUOTES),
+                            $namespace
+                        );
+
+                        if ($attributes) {
+                            $child->addAttributes($attributes);
+                        }
+                    }
+
+                }
+            }
+        }
+
+        if (!isset($xmlDocument)) {
+            $xmlDocument = new static("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        }
+
+        return $xmlDocument;
     }
 
     /**
