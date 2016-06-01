@@ -238,7 +238,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
 
                         static::createXML($values, $child);
                     };
-                } elseif (is_scalar($values) || empty($values)) {
+                } elseif (is_scalar($values) || $values === null) {
                     if (strpbrk($values, static::$dangerousCharacters)) {
                         /** @var SimpleXmlBuilder $child */
                         $child = $xmlDocument->addChild($element, null, $namespace);
