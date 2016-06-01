@@ -78,6 +78,35 @@ class SimpleXmlBuilderTest extends \PHPUnit_Framework_TestCase
                 ),
                 null,
                 '<?xml version="1.0" encoding="UTF-8"?><listing type="test"><component type="name">hotel1</component><component type="city">Groningen</component></listing>'
+            ),
+            array(
+                array(
+                    'listing' => array(
+                        '@attributes' => array('type' => 'test'),
+                        'category' => array(
+                            'Hotels - Amsterdam',
+                            'Hotels - NL'
+                        )
+                    )
+                ),
+                null,
+                '<?xml version="1.0" encoding="UTF-8"?><listing type="test"><category>Hotels - Amsterdam</category><category>Hotels - NL</category></listing>'
+            ),
+            array(
+                array(
+                    'listing' => array(
+                        '@attributes' => array('type' => 'test'),
+                        'date' => array(
+                            '@attributes' => array(
+                                'year' => '2016',
+                                'month' => '05',
+                                'day' => '28'
+                            )
+                        )
+                    )
+                ),
+                null,
+                '<?xml version="1.0" encoding="UTF-8"?><listing type="test"><date year="2016" month="05" day="28"/></listing>'
             )
         );
 

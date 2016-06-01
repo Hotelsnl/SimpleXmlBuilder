@@ -172,6 +172,11 @@ class SimpleXmlBuilder extends SimpleXMLElement
                 unset($values['@attributes']);
             }
 
+            // If values is empty, make sure an empty element is created.
+            if (empty($values)) {
+                $values = null;
+            }
+
             // If there is only one value in the array and it is scalar,
             // make this the new value.
             if (is_array($values)
@@ -194,7 +199,9 @@ class SimpleXmlBuilder extends SimpleXMLElement
                     $xmlDocument->addAttributes($attributes);
                 }
 
-                static::createXML($values, $xmlDocument);
+                if (!empty($values)) {
+                    static::createXML($values, $xmlDocument);
+                }
             } else {
                 if (is_array($values)) {
                     // Check if we have a numeric array. This means we need
@@ -231,7 +238,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
 
                         static::createXML($values, $child);
                     };
-                } elseif (is_scalar($values)) {
+                } elseif (is_scalar($values) || $values === null) {
                     if (strpbrk($values, static::$dangerousCharacters)) {
                         /** @var SimpleXmlBuilder $child */
                         $child = $xmlDocument->addChild($element, null, $namespace);
