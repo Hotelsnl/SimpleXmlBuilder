@@ -1,6 +1,9 @@
 <?php
-/*
+/**
  * This file contains tests for the SimpleXmlBuilder package.
+ *
+ * @package HotelsNL
+ * @subpackage SimpleXmlBuilder
  */
 
 namespace HotelsNL\SimpleXmlBuilder;
