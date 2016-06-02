@@ -32,6 +32,28 @@ class SimpleXmlBuilderTest extends \PHPUnit_Framework_TestCase
                 array(
                     'listing' => array(
                         '@attributes' => array('type' => 'test'),
+                        'text' => 'This should be placed in <CDATA> & || escaped'
+                    )
+                ),
+                null,
+                '<?xml version="1.0" encoding="UTF-8"?><listing type="test"><text><![CDATA[This should be placed in <CDATA> & || escaped]]></text></listing>'
+            ),
+            array(
+                array(
+                    'listing' => array(
+                        '@attributes' => array('type' => 'test'),
+                        'text' => "Carriage return\r\n Or just newline \n as used in Linux"
+                    )
+                ),
+                null,
+                '<?xml version="1.0" encoding="UTF-8"?><listing type="test"><text>Carriage return
+ Or just newline 
+ as used in Linux</text></listing>'
+            ),
+            array(
+                array(
+                    'listing' => array(
+                        '@attributes' => array('type' => 'test'),
                         'hotel' => array(
                             '@attributes' => array('status' => 'offline'),
                             'name' => 'hotel1'

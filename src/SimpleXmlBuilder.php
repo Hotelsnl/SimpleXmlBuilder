@@ -75,15 +75,48 @@ class SimpleXmlBuilder extends SimpleXMLElement
     public function addCData($nodeValue)
     {
         try {
-            $nodeValue = (string)$nodeValue;
+            $nodeValue = (string) $nodeValue;
         } catch (\Exception $e) {
             syslog(LOG_WARNING, $e->getMessage() . PHP_EOL . $e->getTraceAsString());
             return false;
         }
 
+        /** @var \DOMElement $node */
         $node = dom_import_simplexml($this);
         $no = $node->ownerDocument;
         $node->appendChild($no->createCDATASection($nodeValue));
+
+        return true;
+    }
+
+    /**
+     * Append a value to a child.
+     *
+     * @param string|\DOMNode $nodeValue
+     * @return boolean false on error, true on success.
+     */
+    public function appendChild($nodeValue)
+    {
+        if (!is_string($nodeValue) && !$nodeValue instanceof \DOMNode) {
+            syslog(
+                LOG_WARNING,
+                'Not a valid nodevalue for appendChild: '
+                . var_export($nodeValue)
+            );
+
+            return false;
+        }
+
+        /** @var \DOMElement $node */
+        $node = dom_import_simplexml($this);
+
+        // Create a DOMNode from the string.
+        if (is_string($nodeValue)) {
+            $no = $node->ownerDocument;
+            $nodeValue = $no->createTextNode($nodeValue);
+        }
+
+        $node->appendChild($nodeValue);
 
         return true;
     }
@@ -222,10 +255,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
                                 $listing['@namespace'] = $namespace;
                             }
 
-                            static::createXML(
-                                $listing,
-                                $xmlDocument
-                            );
+                            static::createXML($listing, $xmlDocument);
                         }
                     } else {
                         // Continue in the next node.
@@ -239,27 +269,23 @@ class SimpleXmlBuilder extends SimpleXMLElement
                         static::createXML($values, $child);
                     };
                 } elseif (is_scalar($values) || $values === null) {
-                    if (strpbrk($values, static::$dangerousCharacters)) {
-                        /** @var SimpleXmlBuilder $child */
-                        $child = $xmlDocument->addChild($element, null, $namespace);
+                    /** @var SimpleXmlBuilder $child */
+                    $child = $xmlDocument->addChild($element, null, $namespace);
 
-                        if ($attributes) {
-                            $child->addAttributes($attributes);
-                        }
-
-                        $child->addCData($values);
-                    } else {
-                        $child = $xmlDocument->addChild(
-                            $element,
-                            htmlspecialchars($values, ENT_QUOTES),
-                            $namespace
-                        );
-
-                        if ($attributes) {
-                            $child->addAttributes($attributes);
-                        }
+                    if ($attributes) {
+                        $child->addAttributes($attributes);
                     }
 
+                    if (!empty($values)) {
+                        // Replace carriage returns with simple newline.
+                        $values = preg_replace('/\r\n?/', "\n", $values);
+
+                        if (strpbrk($values, static::$dangerousCharacters) !== false) {
+                            $child->addCData($values);
+                        } else {
+                            $child->appendChild($values);
+                        }
+                    }
                 }
             }
         }
