@@ -255,10 +255,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
                                 $listing['@namespace'] = $namespace;
                             }
 
-                            static::createXML(
-                                $listing,
-                                $xmlDocument
-                            );
+                            static::createXML($listing, $xmlDocument);
                         }
                     } else {
                         // Continue in the next node.
