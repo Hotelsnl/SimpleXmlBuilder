@@ -13,6 +13,12 @@ This package adds some convenience functions to SimpleXMLElement.
     public boolean SimpleXMLElement::addCData (string $nodeValue)
 ```
 
+* Append a string or DOMElement to a node. Returns true on success, 
+false on error.
+```php
+    public boolean SimpleXMLElement::appendChild (string|\DOMElement $nodeValue)
+```
+
 * Using an associative PHP array to generate an XML message.
   The special keys `@attributes` and `@namespace` can be added to add 
   attributes to the parent element.
