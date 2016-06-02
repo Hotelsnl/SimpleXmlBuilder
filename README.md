@@ -16,7 +16,7 @@ This package adds some convenience functions to SimpleXMLElement.
 * Append a string or DOMElement to a node. Returns true on success, 
 false on error.
 ```php
-    public boolean SimpleXMLElement::appendChild (string|\DOMElement $nodeValue)
+    public boolean SimpleXMLElement::appendChild (string|\DOMNode $nodeValue)
 ```
 
 * Using an associative PHP array to generate an XML message.
