@@ -279,8 +279,6 @@ class SimpleXmlBuilder extends SimpleXMLElement
                         $child->addAttributes($attributes);
                     }
 
-                    $cdataNeeded = false;
-
                     if (!empty($values)) {
                         // Replace carriage returns with simple newline.
                         $values = preg_replace(
