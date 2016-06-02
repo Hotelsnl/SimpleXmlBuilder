@@ -42,13 +42,13 @@ class SimpleXmlBuilderTest extends \PHPUnit_Framework_TestCase
                 array(
                     'listing' => array(
                         '@attributes' => array('type' => 'test'),
-                        'text' => "Carriage return\r\n Or just newline \n as used int Linux"
+                        'text' => "Carriage return\r\n Or just newline \n as used in Linux"
                     )
                 ),
                 null,
                 '<?xml version="1.0" encoding="UTF-8"?><listing type="test"><text>Carriage return
  Or just newline 
- as used int Linux</text></listing>'
+ as used in Linux</text></listing>'
             ),
             array(
                 array(
