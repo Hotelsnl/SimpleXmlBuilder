@@ -278,11 +278,7 @@ class SimpleXmlBuilder extends SimpleXMLElement
 
                     if (!empty($values)) {
                         // Replace carriage returns with simple newline.
-                        $values = preg_replace(
-                            '/\r\n?/',
-                            "\n",
-                            $values
-                        );
+                        $values = preg_replace('/\r\n?/', "\n", $values);
 
                         if (strpbrk($values, static::$dangerousCharacters) !== false) {
                             $child->addCData($values);
