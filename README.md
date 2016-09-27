@@ -47,7 +47,7 @@ format, increasing readability.
 # Usage
 
 ```php
-    use \HotelsNL\SimpleXmlBuilder\SimpleXmlBuilder;
+    use HotelsNL\SimpleXmlBuilder\SimpleXmlBuilder;
     
     $document = array(
         'listings' => array(
